@@ -9,6 +9,8 @@ def download_site(url):
     s.auth = ('user', 'pass')
     s.headers.update({'x-test': 'true'})
 
+    #batch the item
+
     # both 'x-test' and 'x-test2' are sent
     s.get('http://httpbin.org/headers', headers={'x-test2': 'true'})
 
@@ -21,8 +23,9 @@ def download_site(url):
     }
 
     try:
-        response = requests.get(url, timeout=3, headers=header, params=param)
+        response = requests.get(url, timeout=3)
         if response.status_code == 200:
+            data = response.json()
             print("Read: {}, from {}".format(len(response.content), url))
         else:
             print("no good response")
@@ -40,9 +43,9 @@ def download_all_sites(sites):
 
 if __name__ == "__main__":
     sites = [
-                "https://www.jython.org",
-                "http://olympus.realpython.org/dice",
-            ] * 40
+                "https://jsonplaceholder.typicode.com/todos",
+                "https://jsonplaceholder.typicode.com/posts",
+            ]
 
     start_time = time.time()
     download_all_sites(sites)
