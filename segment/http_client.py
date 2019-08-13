@@ -18,6 +18,8 @@ $ curl -s 'https://interview.segment.build/api/rates/2017-01-02?base=USD&symbols
   }
 }
 """
+import sys
+
 import requests
 
 class HTTP_client:
@@ -36,10 +38,7 @@ class HTTP_client:
         sys.getsizeof (data)
         return data
 
-    def get_data(self, callback):
-        callback(data)
 
-    def
 
 
 if __name__=="__main__":

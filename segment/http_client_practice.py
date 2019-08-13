@@ -54,11 +54,23 @@ class ExchangeRateClient:
         # no need to LRU or LFU
 
     def get_rate(self, date, base, symbols):
+        result = {}
+        new_symbols=[]
+
+        for symbol in symbols:
+            ind = date + "+" + base + "-" + symbol
+            if ind in self.cache:
+                result[ind] = self.cache[ind]
+            else:
+                new_symbols.append(symbol)
+
         # 1. see if request already in cache
-        ind = date + "+" + base + ":" + "-".join(symbols)
-        if ind in self.cache:
-            return self.cache[ind]
-        else:
+        # ind = date + "+" + base + ":" + "-".join(symbols)
+        # if ind in self.cache:
+        #     return self.cache[ind]
+        # else:
+
+        if new_symbols:
 
             # 2. api
             url = "https://interview.segment.build/api/rates/{}?base={}&symbols={}".format(date, base,
@@ -90,10 +102,13 @@ class ExchangeRateClient:
 
             # 3. update cache
             data = response.json()
-            # for symbol, rate in data["Rates"].items():
-            #     ind = date + "+" + base  + "-"+symbol
-            #     self.cache[ind]= rate
-            #     pass
+            for symbol, rate in data["Rates"].items():
+                ind = date + "+" + base + "-" + symbol
+                if ind not in self.cache:
+                    self.cache[ind] = rate
+
+
+""" base + symbol
             for symbol, rate in data["Rates"].items():
                 ind = base + "-" + symbol
                 if ind not in self.cache:
@@ -101,7 +116,7 @@ class ExchangeRateClient:
                 else:
                     if date not in self.cache[ind]:
                         self.cache[ind].update({date: rate})
-
+"""
 
 if __name__ == "__main__":
     date_1 = "2007-01-02"
