@@ -61,12 +61,13 @@ class ExchangeRateClient:
         else:
 
             # 2. api
-            url = "https://interview.segment.build/api/rates/{}?base={}&symbols={}".format(date, base,",".join(symbols))
+            url = "https://interview.segment.build/api/rates/{}?base={}&symbols={}".format(date, base,
+                                                                                           ",".join(symbols))
             try:
-                response = requests.get(url=url,timeout = 10)
+                response = requests.get(url=url, timeout=10)
                 response.raise_for_status()
             except requests.exceptions.ConnectionError as e:
-                #DNS failure, refused connection
+                # DNS failure, refused connection
                 print(e.args[0].reason.args[0])
                 sys.exit(1)
 
@@ -78,18 +79,16 @@ class ExchangeRateClient:
             except requests.exceptions.HTTPError as e:
                 # there is a non-200 error
                 # currency error. date error
-                print ("Status code is non-200:", e.response.text)
+                print("Status code is non-200:", e.response.text)
                 sys.exit(1)
 
-
-        # if want to do retry:
-        #     from requests.adapters import HTTPAdapter
-        #
-        #     s = requests.Session()
-        #     s.mount('http://stackoverflow.com', HTTPAdapter(max_retries=5))
+            # if want to do retry:
+            #     from requests.adapters import HTTPAdapter
+            #
+            #     s = requests.Session()
+            #     s.mount('http://stackoverflow.com', HTTPAdapter(max_retries=5))
 
             data = response.json()
-
 
             # 3. update cache
             self.cache[ind] = data
@@ -106,4 +105,3 @@ if __name__ == "__main__":
 
     rate = client.get_rate(date, base, symbols)
     rate_1 = client.get_rate(date, base, symbols)
-
