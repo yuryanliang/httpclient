@@ -89,6 +89,11 @@ class ExchangeRateClient:
             #     s.mount('http://stackoverflow.com', HTTPAdapter(max_retries=5))
 
             data = response.json()
+            for symbol, rate in data["Rates"].items():
+                ind = date + "+" + base  + "-"+symbol
+                self.cache[ind]= rate
+
+                pass
 
             # 3. update cache
             self.cache[ind] = data
@@ -104,4 +109,3 @@ if __name__ == "__main__":
     client = ExchangeRateClient()
 
     rate = client.get_rate(date, base, symbols)
-    rate_1 = client.get_rate(date, base, symbols)
