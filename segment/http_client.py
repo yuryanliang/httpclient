@@ -19,18 +19,12 @@ $ curl -s 'https://interview.segment.build/api/rates/2017-01-02?base=USD&symbols
 }
 """
 import sys
-
 import requests
-
 class HTTP_client:
 
-    def __init__(self, date, base, symbols):
-        self.date = date
-        self.base = base
-        self.symbols = symbols
 
 
-    def get_data(self):
+    def get_data(self, date, base, symbols):
         url ="https://interview.segment.build/api/rates/{}?base={}&symbols={}".format(self.date, self.base, ",".join(symbols))
 
         response = requests.get(url=url)
@@ -48,12 +42,10 @@ if __name__=="__main__":
     lookup ={}
     ind = date + base + "".join(symbols)
 
-    lookup[ind]= HTTP_client(date, base, symbols).get_data()
+    lookup[ind]= HTTP_client().get_data(date, base, symbols)
 
 
 
-    client=HTTP_client(date, base, symbols)
-    client.get_data()
 
 
     url = "https://interview.segment.build/api/rates/2017-01-02?base=USD&symbols=EUR,GBP"

@@ -74,7 +74,7 @@ class ExchangeRateClient:
 
             # 2. api
             url = "https://interview.segment.build/api/rates/{}?base={}&symbols={}".format(date, base,
-                                                                                           ",".join(symbols))
+                                                                                           ",".join(new_symbols))
             try:
                 response = requests.get(url=url, timeout=10)
                 response.raise_for_status()
@@ -104,10 +104,10 @@ class ExchangeRateClient:
             data = response.json()
             for symbol, rate in data["Rates"].items():
                 ind = date + "+" + base + "-" + symbol
-                if ind not in self.cache:
-                    self.cache[ind] = rate
+                result[ind]=rate
+                self.cache[ind] = rate
 
-
+        return result
 """ base + symbol
             for symbol, rate in data["Rates"].items():
                 ind = base + "-" + symbol
@@ -121,11 +121,12 @@ class ExchangeRateClient:
 if __name__ == "__main__":
     date_1 = "2007-01-02"
     base = "USD"
-    symbols = ["EUR", "GBP"]
+    symbols = ["EUR"]
 
     client = ExchangeRateClient()
 
     rate = client.get_rate(date_1, base, symbols)
-    date_2 = "2007-01-01"
+    date_2 = "2007-01-02"
+    symbols = ["EUR", "GBP"]
     rate_2 = client.get_rate(date_2, base, symbols)
-    1 == 1
+    print(rate_2)
