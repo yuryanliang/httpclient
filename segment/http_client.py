@@ -18,34 +18,55 @@ $ curl -s 'https://interview.segment.build/api/rates/2017-01-02?base=USD&symbols
   }
 }
 """
-import sys
+import multiprocessing
+
 import requests
+
+
 class HTTP_client:
+    def __init__(self):
+        self.cache={}
+
+    def get_data(self, symbols):
+        date = "2017-01-02"
+        base = "USD"
+        # 1. check cache
+        ind = date + base + symbols
+        if ind  in self.cache:
+            return self.cache[ind]
+        else:
+            # 2. if not in cache, call API
+            url = "https://interview.segment.build/api/rates/{}?base={}&symbols={}".format(date, base, ",".join(symbols))
+            response = requests.get(url=url)
+            data = response.json()
+
+            # 3. update cache
+            ind = date + base + symbols
+            value = data
+            self.cache[ind]= value
+            return data
+
+    def multiprocess(self,symbol_list ):
+        with multiprocessing.Pool(processes= 2) as pool:
+            pool.map(self.get_data, symbol_list)
 
 
-
-    def get_data(self, date, base, symbols):
-        url ="https://interview.segment.build/api/rates/{}?base={}&symbols={}".format(self.date, self.base, ",".join(symbols))
-
-        response = requests.get(url=url)
-        data = response.json()
-        sys.getsizeof (data)
-        return data
-
-
-
-
-if __name__=="__main__":
+if __name__ == "__main__":
     date = "2017-01-02"
     base = "USD"
-    symbols = ["EUR", "GBP"]
-    lookup ={}
-    ind = date + base + "".join(symbols)
+    symbols_1 = ["EUR", "GBP"]
 
-    lookup[ind]= HTTP_client().get_data(date, base, symbols)
+    # input = date+ base + symbols_1
+
+    # input2
+
+    input_list =[]
+    # symbols_2 = ["CAD", "CNY"]
+    symbol_list=[symbols_1,symbols_1]
 
 
+    HTTP_client().multiprocess(symbol_list)
+    # data = HTTP_client().get_data(date, base, symbols_1)
+    # data = HTTP_client().get_data(date, base, symbols_1)
 
-
-
-    url = "https://interview.segment.build/api/rates/2017-01-02?base=USD&symbols=EUR,GBP"
+    # print(data)
