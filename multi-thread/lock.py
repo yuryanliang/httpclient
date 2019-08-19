@@ -1,3 +1,4 @@
+import multiprocessing
 import threading
 
 
@@ -24,6 +25,8 @@ if __name__ == '__main__':
     x = 0
     t1 = threading.Thread(target=job1)
     t2 = threading.Thread(target=job2)
+    q=multiprocessing.Queue()
+
     t1.start()
     t2.start()
     t1.join()
