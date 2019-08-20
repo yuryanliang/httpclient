@@ -1,30 +1,4 @@
 """
-part 0
-
-The assignment will require you to write an HTTP client which consumes a simple REST API to retrieve some data.
- Once that works, we’ll make the code more performant and safe for multi-threaded use.
-
- http concepts: header,body.
- python http lib
- send request, parse result
- 内置函数 string, len(string), int(string), string[0:3], string + string
- array, len(array), array.append, hash-map
- dict, set.
-
-输入输出 读文件， 读网络， 读内存 buffet
-thread, lock, channel, shared var, thread communicate, thread pool. thread status
-process, 比较高级， 不一定
-OOD: 生成类，继承， 覆盖方法，多态holimulphizim，
-lambda
-读数据库
-design pattern. 观察者， observer, MVC,singleton, factory, combosite, command
-
-'thinking in java' p500
-
-
-
-
-
 part I
 
 The goal is to write reusable client code that can be used to access an HTTP API that returns currency exchange rates in JSON format.
@@ -68,7 +42,7 @@ class HTTP_client:
         base = "USD"
         # 1. check cache
         ind = date + base + symbols
-        if ind in self.cache:
+        if ind  in self.cache:
             return self.cache[ind]
         else:
             # 2. if not in cache, call API
@@ -85,11 +59,6 @@ class HTTP_client:
     def multiprocess(self,symbol_list ):
         with multiprocessing.Pool(processes= 2) as pool:
             pool.map(self.get_data, symbol_list)
-
-
-import sys
-import io
-
 
 
 if __name__ == "__main__":
